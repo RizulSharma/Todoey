@@ -12,9 +12,17 @@ class ToDoListViewController: UITableViewController {
 
     var itemArray = ["find mike","buy eggos","demogorgon"]
     
+    let defaults = UserDefaults.standard
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
+        if let items = defaults.array(forKey: "ToDoListArray") as? [String]{
+            itemArray = items
+        }
+        
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -59,6 +67,10 @@ class ToDoListViewController: UITableViewController {
             print("success")
             print(textfield.text!)
             self.itemArray.append(textfield.text!)
+        
+            
+            // TO SAVE THE DATA LOCALLY
+            self.defaults.set(self.itemArray, forKey: "ToDoListArray")
             
             self.tableView.reloadData()
             
