@@ -3,20 +3,19 @@
 //  To_Dos
 //
 //  Created by Rizul Sharma on 28/03/19.
-//  Copyright © 2019 Rizul Sharma. All rights reserved.
-//
+//  Copyright © 2019 Rizul Sharma. All rights reserved.s
 import UIKit
+import CoreData
 
-class ToDoListViewController: UITableViewController {
+class ToDoListViewController: UITableViewController{
 
-    var itemArray = [item]()
-    
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
-    
+    var itemArray = [Item]()
+     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+      
         loaditems()
         
     }
@@ -75,11 +74,11 @@ class ToDoListViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
             // what will happen when user clicks on Add Item button in UIalert
-            print("success")
-            print(textfield.text!)
             
-            let newItem = item()
+            
+            let newItem = Item(context:self.context)
             newItem.title = textfield.text!
+            newItem.done = false
             
             
             self.itemArray.append(newItem)
@@ -104,15 +103,12 @@ class ToDoListViewController: UITableViewController {
     }
     
     func saveItems() {
-        
-        let encoder = PropertyListEncoder()
-        
+        //SAVING DATA//
         do{
-            let data = try encoder.encode(itemArray)
-            try data.write(to: dataFilePath!)
+            try context.save()
         }
         catch{
-            
+            print("error saving context \(error)")
         }
         
         
@@ -120,16 +116,43 @@ class ToDoListViewController: UITableViewController {
         
     }
     
-    func loaditems() {
-        let data = try? Data.init(contentsOf: dataFilePath!)
-        let decoder = PropertyListDecoder()
-        do {
-            itemArray = try decoder.decode([item].self, from: data!)
+    func loaditems(with request: NSFetchRequest<Item> = Item.fetchRequest()) {
+      
+        // LOADING/FETCHING DATA//FOR THAT WE HAVE TO CREATE A REQUEST//
+        do{
+            itemArray = try context.fetch(request)
         }
         catch{
-            print("error in decoding")
+            print("error fetching data \(error)")
         }
+        tableView.reloadData()
     }
+
+}
+
+extension ToDoListViewController : UISearchBarDelegate {
     
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        request.predicate = NSPredicate(format: "title CONTAINS[cd] %@", searchBar.text!)
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "title", ascending: true)]
+        
+        
+        loaditems(with: request)
+        
+    }
+
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            loaditems()
+            
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+
+            }
+                    }
+    }
     
 }
