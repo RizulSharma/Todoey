@@ -13,6 +13,7 @@
 		BB076D28224D2229009367DD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BB076D27224D2229009367DD /* Assets.xcassets */; };
 		BB076D2B224D2229009367DD /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BB076D29224D2229009367DD /* LaunchScreen.storyboard */; };
 		BBC1764E22538C4B00BB6D28 /* Model1.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BBC1764C22538C4B00BB6D28 /* Model1.xcdatamodeld */; };
+		BBC1765022538F2200BB6D28 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BBC1764F22538F2200BB6D28 /* CategoryViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		BB076D2A224D2229009367DD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BB076D2C224D2229009367DD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BBC1764D22538C4B00BB6D28 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		BBC1764F22538F2200BB6D28 /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 		BBF3300F224E82DD00619960 /* Controllerts */ = {
 			isa = PBXGroup;
 			children = (
+				BBC1764F22538F2200BB6D28 /* CategoryViewController.swift */,
 				BB076D22224D2229009367DD /* ToDoListsViewController.swift */,
 			);
 			path = Controllerts;
@@ -170,6 +173,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BBC1765022538F2200BB6D28 /* CategoryViewController.swift in Sources */,
 				BB076D23224D2229009367DD /* ToDoListsViewController.swift in Sources */,
 				BB076D21224D2228009367DD /* AppDelegate.swift in Sources */,
 				BBC1764E22538C4B00BB6D28 /* Model1.xcdatamodeld in Sources */,
