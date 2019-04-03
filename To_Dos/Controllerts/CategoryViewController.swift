@@ -49,6 +49,7 @@ class CategoryViewController: UITableViewController {
             newcategory.name = textfield.text
             self.categories.append(newcategory)
             
+            
             self.saveCategory()
             
         }
@@ -86,6 +87,19 @@ class CategoryViewController: UITableViewController {
         tableView.reloadData()
         
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "goToItems", sender: self)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        let destinationVC = segue.destination as! ToDoListViewController
+        
+        
+       if let indexpath = tableView.indexPathForSelectedRow {
+            destinationVC.selectedCategory = categories[indexpath.row]
+        }
+            }
     
     
 }
