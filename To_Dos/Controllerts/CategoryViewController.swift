@@ -7,36 +7,38 @@
 //
 
 import UIKit
-import CoreData
+import RealmSwift
 
 
 class CategoryViewController: UITableViewController {
     
-    var categories = [Category]()
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
+    let realm = try! Realm()
+    
+    var categories : Results<Category>?
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
-
-       loadCategory()
+        print(Realm.Configuration.defaultConfiguration.fileURL!)
+        loadCategory()
     }
-
-
+    
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-     
-        return categories.count
+        
+        return categories?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "CategoryCell", for: indexPath)
         
-        cell.textLabel?.text = categories[indexPath.row].name
+        cell.textLabel?.text = categories?[indexPath.row].name ?? "NO CATEGORY ADDED YET"
         
         return cell
     }
-
-   
+    
+    
     @IBAction func addbuttonPressed(_ sender: UIBarButtonItem) {
         
         var textfield = UITextField()
@@ -45,18 +47,16 @@ class CategoryViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add", style: .default) { (action) in
             
-            let newcategory = Category(context: self.context)   ////WHAT SHOULD HAPPEN WHEN ADD IS PRESSED
-            newcategory.name = textfield.text
-            self.categories.append(newcategory)
-            
-            
-            self.saveCategory()
+            let newcategory = Category()
+            ////WHAT SHOULD HAPPEN WHEN ADD IS PRESSED
+            newcategory.name = textfield.text!
+            self.save(category: newcategory)
             
         }
         alert.addTextField { (field) in
             
             textfield = field
-        field.placeholder = "Enter New Category Here"
+            field.placeholder = "Enter New Category Here"
             
             
         }
@@ -64,10 +64,12 @@ class CategoryViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
-    func saveCategory() {
+    func save(category : Category) {
         
         do{
-            try context.save()
+            try realm.write {
+                realm.add(category)
+            }
         }
         catch{
             print("error saving categories \(error)")
@@ -76,14 +78,10 @@ class CategoryViewController: UITableViewController {
         
     }
     
-    func loadCategory(with request : NSFetchRequest<Category> = Category.fetchRequest()){
+    func loadCategory(){
         
-        do{
-            categories = try context.fetch(request)
-        }
-        catch{
-            print("error fetching database \(error)")
-        }
+        categories = realm.objects(Category.self)
+        
         tableView.reloadData()
         
     }
@@ -96,10 +94,9 @@ class CategoryViewController: UITableViewController {
         let destinationVC = segue.destination as! ToDoListViewController
         
         
-       if let indexpath = tableView.indexPathForSelectedRow {
-            destinationVC.selectedCategory = categories[indexpath.row]
+        if let indexpath = tableView.indexPathForSelectedRow {
+            destinationVC.selectedCategory = categories?[indexpath.row]
         }
-            }
-    
-    
+    }
+
 }
